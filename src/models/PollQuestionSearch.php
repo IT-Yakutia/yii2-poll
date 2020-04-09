@@ -2,50 +2,35 @@
 
 namespace ityakutia\poll\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use ityakutia\poll\models\base\OptionBase as BaseOptionBase;
 
-/**
- * OptionSearch represents the model behind the search form of `common\models\Option`.
- */
-class OptionSearch extends BaseOptionBase
+class PollQuestionSearch extends PollQuestion
 {
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['id', 'type', 'question_id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['value'], 'safe'],
+            [['id', 'type', 'sort', 'is_publish', 'status', 'created_at', 'updated_at', 'poll_id'], 'integer'],
+            [['title', 'description'], 'safe'],
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
-    public function search($params, $question_id = false)
+    public function search($params)
     {
-        $query = Option::find();
+        $query = PollQuestion::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=> ['defaultOrder' => ['sort'=>SORT_ASC]],
         ]);
 
         $this->load($params);
@@ -59,14 +44,14 @@ class OptionSearch extends BaseOptionBase
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'type' => $this->type,
-            'question_id' => $question_id ? $question_id : $this->question_id,
+            'is_publish' => $this->is_publish,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'type' => $this->type,
         ]);
 
-        $query->andFilterWhere(['like', 'value', $this->value]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

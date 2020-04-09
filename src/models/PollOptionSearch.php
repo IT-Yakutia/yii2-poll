@@ -5,13 +5,15 @@ namespace ityakutia\poll\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-class PollSearch extends Poll
+class PollOptionSearch extends PollOption
 {
+    public $poll_id;
+
     public function rules()
     {
         return [
-            [['id', 'sort', 'is_publish', 'status', 'created_at', 'updated_at', 'type'], 'integer'],
-            [['title', 'photo', 'slug', 'description', 'meta_description', 'meta_keywords'], 'safe'],
+            [['id', 'sort', 'poll_question_id', 'is_publish', 'status', 'created_at', 'updated_at', 'poll_id'], 'integer'],
+            [['title'], 'safe'],
         ];
     }
 
@@ -23,7 +25,7 @@ class PollSearch extends Poll
 
     public function search($params)
     {
-        $query = Poll::find();
+        $query = PollOption::find();
 
         // add conditions that should always apply here
 
@@ -40,18 +42,20 @@ class PollSearch extends Poll
             return $dataProvider;
         }
 
+        $query->joinWith('pollQuestion');
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
-            'is_publish' => $this->is_publish,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'poll_option.id' => $this->id,
+            'poll_option.is_publish' => $this->is_publish,
+            'poll_id' => $this->poll_id,
+            'poll_option.status' => $this->status,
+            'poll_option.created_at' => $this->created_at,
+            'poll_option.updated_at' => $this->updated_at,
+            'poll_option.poll_question_id' => $this->poll_question_id,
+            'poll_option.type' => $this->type,
         ]);
 
-        $query->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'photo', $this->photo]);
+        $query->andFilterWhere(['like', 'poll_option.title', $this->title]);
 
         return $dataProvider;
     }

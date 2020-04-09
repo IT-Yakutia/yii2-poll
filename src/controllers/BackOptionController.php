@@ -3,8 +3,8 @@
 namespace ityakutia\poll\controllers\backend;
 
 use Yii;
-use ityakutia\poll\models\Option;
-use ityakutia\poll\models\OptionSearch;
+use ityakutia\poll\models\PollOption;
+use ityakutia\poll\models\PollOptionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,7 +35,7 @@ class BackOptionController extends Controller
      */
     public function actionIndex($question_id)
     {
-        $searchModel = new OptionSearch();
+        $searchModel = new PollOptionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $question_id);
 
         return $this->render('index', [
@@ -64,7 +64,7 @@ class BackOptionController extends Controller
      */
     public function actionCreate($question_id)
     {
-        $model = new Option();
+        $model = new PollOption();
         $model->question_id = $question_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -119,7 +119,7 @@ class BackOptionController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Option::findOne($id)) !== null) {
+        if (($model = PollOption::findOne($id)) !== null) {
             return $model;
         }
 

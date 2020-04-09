@@ -2,104 +2,103 @@
 
 namespace ityakutia\poll\models;
 
-use ityakutia\poll\components\ExtendedActiveRecord;
+use uraankhayayaal\sortable\behaviors\Sortable;
+use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\behaviors\SluggableBehavior;
 use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
+
 
 /**
  * This is the model class for table "poll".
  *
  * @property int $id
- * @property string $name
- * @property int $type
+ * @property string $title
  * @property string $photo
  * @property int $sort
  * @property string $description
+ * @property string $meta_description
+ * @property string $meta_keywords
+ * @property string $slug
+ * @property int $is_publish
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
  *
- * @property Answer[] $answers
- * @property Question[] $questions
- * //@property PollUser[] $voteUsers
+ * @property PollQuestion[] $pollQuestions
  */
-class Poll extends ExtendedActiveRecord
+class Poll extends ActiveRecord
 {
-    const TYPE_DEFAULT = 10;
 
-    const TYPES = [
-        self::TYPE_DEFAULT => 'Обычный',
-    ];
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::class,
+            'sortable' => [
+                'class' => Sortable::class,
+                'query' => self::find(),
+            ],
+            [
+                'class' => SluggableBehavior::class,
+                'attribute' => 'title',
+                'slugAttribute' => 'slug',
+                'immutable' => true,
+                'ensureUnique' => true,
+            ],
+        ];
+    }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function tableName()
     {
         return 'poll';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['type', 'sort', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['description'], 'string'],
-            [['name', 'photo'], 'string', 'max' => 255],
-            [['name'], 'unique'],
-            ['type', 'default', 'value' => $this::TYPE_DEFAULT],
+            [['title'], 'required'],
+            [['sort', 'is_publish', 'status', 'created_at', 'updated_at', 'type'], 'integer'],
+            [['title', 'photo', 'slug', 'meta_description', 'meta_keywords'], 'string', 'max' => 255],
+            ['slug', 'unique'],
+            ['description', 'string']
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function attributeLabels()
     {
         return [
             'id' => 'ID',
-            'name' => 'Заголовок',
-            'type' => 'Тип',
-            'photo' => 'Фото',
+            'title' => Yii::t('app', 'Название опроса'),
+            'photo' => Yii::t('app', 'Фото'),
             'sort' => 'Sort',
-            'description' => 'Описание',
-            'status' => 'Статус',
-            'created_at' => 'Создан',
-            'updated_at' => 'Обновлен',
+            'description' => Yii::t('app', 'Описание'),
+            'slug' => Yii::t('app', 'Ссылка опроса'),
+            'meta_description' => Yii::t('app', 'SEO описание'),
+            'meta_keywords' => Yii::t('app', 'SEO ключевые слова'),
+
+            'is_publish' => Yii::t('app', 'Опубликовать'),
+            'status' => 'Status',
+            'type' => Yii::t('app', 'Тип Квиза'),
+            'created_at' => Yii::t('app', 'Создан'),
+            'updated_at' => Yii::t('app', 'Изменен'),
         ];
     }
 
     /**
      * @return ActiveQuery
      */
-    public function getAnswers()
+    public function getPollQuestions()
     {
-        return $this->hasMany(Answer::class, ['poll_id' => 'id']);
+        return $this->hasMany(PollQuestion::class, ['poll_id' => 'id']);
     }
-
-    /**
-     * @return ActiveQuery
-     */
-    public function getQuestions()
-    {
-        return $this->hasMany(Question::class, ['poll_id' => 'id']);
-    }
-
-    public function getQuestionsCount()
-    {
-        return $this->hasMany(Question::class, ['poll_id' => 'id'])->count();
-    }
-
-    public function getActualQuestions($poll_user_id)
-    {
-        $questions = Question::find()
-            ->joinWith('answers')
-            ->where(['question.poll_id' => $this->id, 'answer.poll_user_id' => $poll_user_id])
-            ->select(['question.id'])
-            ->asArray()
-            ->all();
-
-        return $this->hasMany(Question::class, ['poll_id' => 'id'])->andWhere(['not in', 'id', $questions])->orderBy(['sort' => SORT_ASC])->all();
-    }
-
-    // /**
-    //  * @return ActiveQuery
-    //  */
-    // public function getPollUsers()
-    // {
-    //     return $this->hasMany(PollUser::class, ['poll_id' => 'id']);
-    // }
 }
