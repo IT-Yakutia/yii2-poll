@@ -1,19 +1,18 @@
 <?php
 
-namespace ityakutia\poll\controllers\backend;
+namespace ityakutia\poll\controllers;
 
 use Yii;
-use ityakutia\poll\models\Vote;
-use ityakutia\poll\models\VoteSearch;
-use uraankhayayaal\materializecomponents\imgcropper\actions\UploadAction;
+use ityakutia\poll\models\Answer;
+use ityakutia\poll\models\AnswerSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * VoteController implements the CRUD actions for Vote model.
+ * AnswerController implements the CRUD actions for Answer model.
  */
-class VoteController extends Controller
+class BackAnswerController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,26 +29,13 @@ class VoteController extends Controller
         ];
     }
 
-    public function actions()
-    {
-        return [
-            'uploadPhoto' => [
-                'class' => UploadAction::class,
-                'url' => Yii::$app->params['img_url'] . 'vote',
-                'path' => Yii::$app->params['img_path'] . 'vote',
-                'width' => 500,
-                'height' => 500,
-            ]
-        ];
-    }
-
     /**
-     * Lists all Vote models.
+     * Lists all Answer models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new VoteSearch();
+        $searchModel = new AnswerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -59,7 +45,7 @@ class VoteController extends Controller
     }
 
     /**
-     * Displays a single Vote model.
+     * Displays a single Answer model.
      * @param integer $id
      * @return mixed
      */
@@ -71,13 +57,13 @@ class VoteController extends Controller
     }
 
     /**
-     * Creates a new Vote model.
+     * Creates a new Answer model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Vote();
+        $model = new Answer();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -89,7 +75,7 @@ class VoteController extends Controller
     }
 
     /**
-     * Updates an existing Vote model.
+     * Updates an existing Answer model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -108,7 +94,7 @@ class VoteController extends Controller
     }
 
     /**
-     * Deletes an existing Vote model.
+     * Deletes an existing Answer model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -121,15 +107,15 @@ class VoteController extends Controller
     }
 
     /**
-     * Finds the Vote model based on its primary key value.
+     * Finds the Answer model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Vote the loaded model
+     * @return Answer the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Vote::findOne($id)) !== null) {
+        if (($model = Answer::findOne($id)) !== null) {
             return $model;
         }
 

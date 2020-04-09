@@ -26,14 +26,14 @@ use yii\db\ActiveQuery;
  * @property Question[] $questions
  * @property VoteUser[] $voteUsers
  */
-class VoteBase extends ActiveRecord
+class BasePoll extends ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'vote';
+        return 'poll';
     }
 
     /**

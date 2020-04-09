@@ -26,6 +26,11 @@ class VoteUser extends ExtendedActiveRecord
     const STATUS_HIDDEN = 10;
     const STATUS_ACTIVE = 15;
 
+    public static function tableName()
+    {
+        return 'poll_vote_user';
+    }
+
     public function rules()
     {
         return [

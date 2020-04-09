@@ -4,12 +4,8 @@ namespace ityakutia\poll\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use ityakutia\poll\models\base\VoteBase as BaseVoteBase;
 
-/**
- * VoteSearch represents the model behind the search form of `common\models\Vote`.
- */
-class VoteSearch extends BaseVoteBase
+class PollSearch extends Poll
 {
     /**
      * @inheritdoc
@@ -22,25 +18,15 @@ class VoteSearch extends BaseVoteBase
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function scenarios()
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     *
-     * @return ActiveDataProvider
-     */
     public function search($params)
     {
-        $query = Vote::find();
+        $query = Poll::find();
 
         // add conditions that should always apply here
 

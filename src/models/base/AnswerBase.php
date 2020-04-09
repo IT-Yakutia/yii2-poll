@@ -37,7 +37,7 @@ class AnswerBase extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'answer';
+        return 'poll_answer';
     }
 
     /**

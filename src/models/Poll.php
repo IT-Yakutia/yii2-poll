@@ -6,7 +6,7 @@ use ityakutia\poll\components\ExtendedActiveRecord;
 use yii\db\ActiveQuery;
 
 /**
- * This is the model class for table "vote".
+ * This is the model class for table "poll".
  *
  * @property int $id
  * @property string $name
@@ -20,15 +20,20 @@ use yii\db\ActiveQuery;
  *
  * @property Answer[] $answers
  * @property Question[] $questions
- * @property VoteUser[] $voteUsers
+ * //@property PollUser[] $voteUsers
  */
-class Vote extends ExtendedActiveRecord
+class Poll extends ExtendedActiveRecord
 {
     const TYPE_DEFAULT = 10;
 
     const TYPES = [
         self::TYPE_DEFAULT => 'Обычный',
     ];
+
+    public static function tableName()
+    {
+        return 'poll';
+    }
 
     public function rules()
     {
@@ -62,7 +67,7 @@ class Vote extends ExtendedActiveRecord
      */
     public function getAnswers()
     {
-        return $this->hasMany(Answer::class, ['vote_id' => 'id']);
+        return $this->hasMany(Answer::class, ['poll_id' => 'id']);
     }
 
     /**
@@ -70,31 +75,31 @@ class Vote extends ExtendedActiveRecord
      */
     public function getQuestions()
     {
-        return $this->hasMany(Question::class, ['vote_id' => 'id']);
+        return $this->hasMany(Question::class, ['poll_id' => 'id']);
     }
 
     public function getQuestionsCount()
     {
-        return $this->hasMany(Question::class, ['vote_id' => 'id'])->count();
+        return $this->hasMany(Question::class, ['poll_id' => 'id'])->count();
     }
 
-    public function getActualQuestions($vote_user_id)
+    public function getActualQuestions($poll_user_id)
     {
         $questions = Question::find()
             ->joinWith('answers')
-            ->where(['question.vote_id' => $this->id, 'answer.vote_user_id' => $vote_user_id])
+            ->where(['question.poll_id' => $this->id, 'answer.poll_user_id' => $poll_user_id])
             ->select(['question.id'])
             ->asArray()
             ->all();
 
-        return $this->hasMany(Question::class, ['vote_id' => 'id'])->andWhere(['not in', 'id', $questions])->orderBy(['sort' => SORT_ASC])->all();
+        return $this->hasMany(Question::class, ['poll_id' => 'id'])->andWhere(['not in', 'id', $questions])->orderBy(['sort' => SORT_ASC])->all();
     }
 
-    /**
-     * @return ActiveQuery
-     */
-    public function getVoteUsers()
-    {
-        return $this->hasMany(VoteUser::class, ['vote_id' => 'id']);
-    }
+    // /**
+    //  * @return ActiveQuery
+    //  */
+    // public function getPollUsers()
+    // {
+    //     return $this->hasMany(PollUser::class, ['poll_id' => 'id']);
+    // }
 }

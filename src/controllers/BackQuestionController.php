@@ -3,16 +3,16 @@
 namespace ityakutia\poll\controllers\backend;
 
 use Yii;
-use ityakutia\poll\models\VoteUser;
-use ityakutia\poll\models\VoteUsereSearch;
+use ityakutia\poll\models\Question;
+use ityakutia\poll\models\QuestionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * VoteUserController implements the CRUD actions for VoteUser model.
+ * QuestionController implements the CRUD actions for Question model.
  */
-class VoteUserController extends Controller
+class BackQuestionController extends Controller
 {
     /**
      * @inheritdoc
@@ -30,22 +30,23 @@ class VoteUserController extends Controller
     }
 
     /**
-     * Lists all VoteUser models.
+     * Lists all Question models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($vote_id)
     {
-        $searchModel = new VoteUsereSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new QuestionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $vote_id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'vote_id' => $vote_id,
         ]);
     }
 
     /**
-     * Displays a single VoteUser model.
+     * Displays a single Question model.
      * @param integer $id
      * @return mixed
      */
@@ -57,13 +58,14 @@ class VoteUserController extends Controller
     }
 
     /**
-     * Creates a new VoteUser model.
+     * Creates a new Question model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($vote_id)
     {
-        $model = new VoteUser();
+        $model = new Question();
+        $model->vote_id = $vote_id;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -75,7 +77,7 @@ class VoteUserController extends Controller
     }
 
     /**
-     * Updates an existing VoteUser model.
+     * Updates an existing Question model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -94,28 +96,30 @@ class VoteUserController extends Controller
     }
 
     /**
-     * Deletes an existing VoteUser model.
+     * Deletes an existing Question model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $vote_id = $model->vote_id;
+        $model->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'vote_id' => $vote_id]);
     }
 
     /**
-     * Finds the VoteUser model based on its primary key value.
+     * Finds the Question model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return VoteUser the loaded model
+     * @return Question the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = VoteUser::findOne($id)) !== null) {
+        if (($model = Question::findOne($id)) !== null) {
             return $model;
         }
 

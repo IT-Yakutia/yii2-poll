@@ -17,6 +17,12 @@ use yii\db\ActiveQuery;
  */
 class AnswerOption extends AnswerOptionBase
 {
+
+    public static function tableName()
+    {
+        return 'poll_answer_option';
+    }
+
     /**
      * @inheritdoc
      */

@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * OptionController implements the CRUD actions for Option model.
  */
-class OptionController extends Controller
+class BackOptionController extends Controller
 {
     /**
      * @inheritdoc

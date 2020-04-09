@@ -25,7 +25,7 @@ class AnswerOptionBase extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'answer_option';
+        return 'poll_answer_option';
     }
 
     /**

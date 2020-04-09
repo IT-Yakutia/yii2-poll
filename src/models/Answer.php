@@ -36,6 +36,11 @@ class Answer extends ExtendedActiveRecord
     const SCENARIO_TIME = 'time';
     const SCENARIO_DATE_TIME = 'date_time';
 
+    public static function tableName()
+    {
+        return 'poll_answer';
+    }
+ 
     public function scenarios()
     {
         $scenarios = parent::scenarios();

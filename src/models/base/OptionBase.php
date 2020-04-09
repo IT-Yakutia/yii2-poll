@@ -31,7 +31,7 @@ class OptionBase extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'option';
+        return 'poll_option';
     }
 
     /**

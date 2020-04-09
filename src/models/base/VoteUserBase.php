@@ -29,7 +29,7 @@ class VoteUserBase extends ActiveRecord
      */
     public static function tableName()
     {
-        return 'vote_user';
+        return 'poll_vote_user';
     }
 
     /**

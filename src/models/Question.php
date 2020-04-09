@@ -49,6 +49,11 @@ class Question extends ExtendedActiveRecord
         self::TYPE_INTEGER => 'Число',
     ];
 
+    public static function tableName()
+    {
+        return 'poll_question';
+    }
+
     /**
      * @inheritdoc
      */

@@ -32,6 +32,12 @@ class Option extends ExtendedActiveRecord
         self::TYPE_NUMBER => 'Число',
         self::TYPE_IMAGE => 'Изображение',
     ];
+
+    public static function tableName()
+    {
+        return 'poll_option';
+    }
+
     /**
      * @inheritdoc
      */
