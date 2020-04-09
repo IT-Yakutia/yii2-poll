@@ -11,7 +11,7 @@ class PollQuestionSearch extends PollQuestion
     public function rules()
     {
         return [
-            [['id', 'type', 'sort', 'is_publish', 'status', 'created_at', 'updated_at', 'poll_id'], 'integer'],
+            [['id', 'sort', 'is_publish', 'status', 'created_at', 'updated_at', 'poll_id'], 'integer'],
             [['title', 'description'], 'safe'],
         ];
     }
@@ -30,7 +30,7 @@ class PollQuestionSearch extends PollQuestion
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=> ['defaultOrder' => ['sort'=>SORT_ASC]],
+            'sort' => ['defaultOrder' => ['sort' => SORT_ASC]],
         ]);
 
         $this->load($params);
@@ -48,7 +48,6 @@ class PollQuestionSearch extends PollQuestion
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'type' => $this->type,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title]);

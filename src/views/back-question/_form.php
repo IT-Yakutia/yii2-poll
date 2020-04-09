@@ -1,52 +1,42 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
+use ityakutia\poll\models\Poll;
+use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\Question */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="question-form">
+<div class="poll-question-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'errorCssClass' => 'red-text',
+    ]); ?>
 
-    <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col s12 m6">
+            <?= WCheckbox::widget(['model' => $model, 'attribute' => 'is_publish']); ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'type')
-        ->dropDownList(
-            $model::TYPES,           // Flat array ('id'=>'label')
-            ['prompt'=>'выберите тип']    // options
-        ); ?>
+    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'show_for_option_id')->dropDownList(
-        ArrayHelper::map(\common\models\Option::find()->where(['question_id' => $model->parent_id])->all(),'id','value'),
-        [
-            'prompt'=>($model->isNewRecord || $model->vote_id == null || count($model->parent) == 0 || count($model->parent->options) == 0) ? 'Поле будет доступно после сохранения, выбора опроса и при наличии вариантов ответа родительского вопроса' : 'Показывать для ответа',
-            'disabled' => ($model->isNewRecord || $model->vote_id == null || count($model->parent) == 0 || count($model->parent->options) == 0) ? 'disabled' : false,
-        ]
-    ); ?>
-
-    <?= $form->field($model, 'vote_id')->dropDownList(ArrayHelper::map(\common\models\Vote::find()->all(),'id','name'), ['prompt'=>'Выберите опрос']); ?>
-
-    <?= $form->field($model, 'parent_id')->dropDownList(
-        ArrayHelper::map(\common\models\Question::find()->where(['vote_id' => $model->vote_id])->andWhere(['<>','id', $model->id])->all(),'id','name'),
-        [
-            'prompt'=>($model->isNewRecord || $model->vote_id == null) ? 'Поле будет доступно после сохранения и выбора опроса' : 'Выберите родительский вопрос',
-            'disabled' => ($model->isNewRecord || $model->vote_id == null) ? 'disabled' : false,
-        ]
-    ); ?>
+    <?= $form->field($model, 'poll_id')->dropDownList(ArrayHelper::map(Poll::find()->all(), 'id', 'title'), ['prompt' => 'Выберите']) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn']) ?>
+    </div>
+    <div class="fixed-action-btn">
+        <?= Html::submitButton('<i class="material-icons">save</i>', [
+            'class' => 'btn-floating btn-large waves-effect waves-light tooltipped',
+            'title' => 'Сохранить',
+            'data-position' => "left",
+            'data-tooltip' => "Сохранить",
+        ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

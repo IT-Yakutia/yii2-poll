@@ -10,7 +10,7 @@ class PollSearch extends Poll
     public function rules()
     {
         return [
-            [['id', 'sort', 'is_publish', 'status', 'created_at', 'updated_at', 'type'], 'integer'],
+            [['id', 'sort', 'is_publish', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'photo', 'slug', 'description', 'meta_description', 'meta_keywords'], 'safe'],
         ];
     }

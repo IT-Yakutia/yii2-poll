@@ -64,7 +64,7 @@ class Poll extends ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['sort', 'is_publish', 'status', 'created_at', 'updated_at', 'type'], 'integer'],
+            [['sort', 'is_publish', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'photo', 'slug', 'meta_description', 'meta_keywords'], 'string', 'max' => 255],
             ['slug', 'unique'],
             ['description', 'string']
@@ -78,7 +78,7 @@ class Poll extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => Yii::t('app', 'Название опроса'),
+            'title' => Yii::t('app', 'Название'),
             'photo' => Yii::t('app', 'Фото'),
             'sort' => 'Sort',
             'description' => Yii::t('app', 'Описание'),

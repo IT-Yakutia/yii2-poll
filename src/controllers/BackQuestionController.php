@@ -1,10 +1,10 @@
 <?php
 
-namespace ityakutia\poll\controllers\backend;
+namespace ityakutia\poll\controllers;
 
 use Yii;
-use ityakutia\poll\models\Question;
-use ityakutia\poll\models\QuestionSearch;
+use ityakutia\poll\models\PollQuestion;
+use ityakutia\poll\models\PollQuestionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,15 +33,14 @@ class BackQuestionController extends Controller
      * Lists all Question models.
      * @return mixed
      */
-    public function actionIndex($vote_id)
+    public function actionIndex()
     {
-        $searchModel = new QuestionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $vote_id);
+        $searchModel = new PollQuestionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'vote_id' => $vote_id,
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -62,13 +61,12 @@ class BackQuestionController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($vote_id)
+    public function actionCreate($poll_id)
     {
-        $model = new Question();
-        $model->vote_id = $vote_id;
+        $model = new PollQuestion();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['back/view', 'id' => $poll_id]);
         }
 
         return $this->render('create', [
@@ -119,7 +117,7 @@ class BackQuestionController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Question::findOne($id)) !== null) {
+        if (($model = PollQuestion::findOne($id)) !== null) {
             return $model;
         }
 
