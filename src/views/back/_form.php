@@ -44,7 +44,7 @@ use yii\widgets\ActiveForm;
         'maxSize' => [540, 350, 'px'],
         'minSize' => [10, 10, 'px'],
         'startSize' => [100, 100, '%'],
-        'uploadUrl' => Url::to(['/poll/poll/uploadImg']),
+        'uploadUrl' => Url::to(['/poll/back/uploadImg']),
     ]); ?>
     <small class="grey-text">Загружать изображения размером 540x350 пикселей</small>
 
