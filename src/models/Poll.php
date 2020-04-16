@@ -86,7 +86,7 @@ class Poll extends ActiveRecord
             'meta_description' => Yii::t('app', 'SEO описание'),
             'meta_keywords' => Yii::t('app', 'SEO ключевые слова'),
 
-            'is_publish' => Yii::t('app', 'Опубликовать'),
+            'is_publish' => Yii::t('app', 'Опубликовано'),
             'status' => 'Status',
             'type' => Yii::t('app', 'Тип Квиза'),
             'created_at' => Yii::t('app', 'Создан'),

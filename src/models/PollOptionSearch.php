@@ -52,7 +52,6 @@ class PollOptionSearch extends PollOption
             'poll_option.created_at' => $this->created_at,
             'poll_option.updated_at' => $this->updated_at,
             'poll_option.poll_question_id' => $this->poll_question_id,
-            'poll_option.type' => $this->type,
         ]);
 
         $query->andFilterWhere(['like', 'poll_option.title', $this->title]);

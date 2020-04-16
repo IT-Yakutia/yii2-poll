@@ -24,7 +24,7 @@ class PollQuestionSearch extends PollQuestion
 
     public function search($params)
     {
-        $query = PollQuestion::find();
+        $query = PollQuestion::find()->where(['poll_id' => $params['id']]);
 
         // add conditions that should always apply here
 

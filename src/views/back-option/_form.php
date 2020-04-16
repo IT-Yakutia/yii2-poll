@@ -1,32 +1,50 @@
 <?php
 
+use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\Option */
-/* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="option-form">
+<div class="quiz-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'errorCssClass' => 'red-text',
+    ]); ?>
 
-    <?= $form->field($model, 'value')->textInput(['maxlength' => true]) ?>
-    
-    <?= $form->field($model, 'type')
-        ->dropDownList(
-            $model::TYPES,           // Flat array ('id'=>'label')
-            ['prompt'=>'выберите тип']    // options
-        ); ?>
-        
-    <?= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
+    <div class="row">
+        <div class="col s12 m12">
+            <?= WCheckbox::widget(['model' => $model, 'attribute' => 'is_publish']); ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'question_id')->dropDownList(ArrayHelper::map(\common\models\Question::find()/*->where(['vote_id' => $vote_id])*/->all(),'id','name'), ['prompt'=>'Выберите вопрос']); ?>
+    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn']) ?>
+        <?php if (!$model->isNewRecord) { ?>
+            <?= Html::a(
+                'Удалить ответ',
+                ['back-option/delete'],
+                [
+                    'class' => 'btn red',
+                    'data' => [
+                        'method' => 'post',
+                        'params' => [
+                            'id' => $model->id
+                        ]
+                    ]
+                ]
+            ) ?>
+        <?php } ?>
+    </div>
+    <div class="fixed-action-btn">
+        <?= Html::submitButton('<i class="material-icons">save</i>', [
+            'class' => 'btn-floating btn-large waves-effect waves-light tooltipped',
+            'title' => 'Сохранить',
+            'data-position' => "left",
+            'data-tooltip' => "Сохранить",
+        ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

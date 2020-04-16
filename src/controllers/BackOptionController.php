@@ -1,10 +1,11 @@
 <?php
 
-namespace ityakutia\poll\controllers\backend;
+namespace ityakutia\poll\controllers;
 
 use Yii;
 use ityakutia\poll\models\PollOption;
 use ityakutia\poll\models\PollOptionSearch;
+use ityakutia\poll\models\PollQuestion;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -45,11 +46,6 @@ class BackOptionController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Option model.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -57,18 +53,14 @@ class BackOptionController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Option model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
     public function actionCreate($question_id)
     {
         $model = new PollOption();
-        $model->question_id = $question_id;
+        $model->poll_question_id = $question_id;
+        $questionModel = PollQuestion::findOne($question_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['back-question/update', 'id' => $question_id, 'poll_id' => $questionModel->poll_id]);
         }
 
         return $this->render('create', [
@@ -76,18 +68,12 @@ class BackOptionController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing Option model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $poll_id = PollQuestion::findOne($model->poll_question_id)->poll_id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['back-question/update', 'id' => $model->poll_question_id, 'poll_id' => $poll_id]);
         }
 
         return $this->render('update', [
@@ -95,28 +81,19 @@ class BackOptionController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Option model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $model = $this->findModel($id);
-        $question_id = $model->question_id;
-        $model->delete();
+        $data = Yii::$app->request->post();
+        $model = $this->findModel((int) $data['id']);
+        if(false !== $model->delete()) {
+            Yii::$app->session->setFlash('success', 'Запись успешно удалена!');
+        }
+        $question_id = $model->poll_question_id;
+        $poll = PollQuestion::findOne($question_id)->poll_id;
 
-        return $this->redirect(['index', 'question_id' => $question_id]);
+        return $this->redirect(['back-question/update', 'id' => $question_id, 'poll_id' => $poll]);
     }
 
-    /**
-     * Finds the Option model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Option the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = PollOption::findOne($id)) !== null) {

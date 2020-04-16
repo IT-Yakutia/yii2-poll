@@ -3,6 +3,8 @@
 namespace ityakutia\poll\controllers;
 
 use ityakutia\poll\models\Poll;
+use ityakutia\poll\models\PollOptionSearch;
+use ityakutia\poll\models\PollQuestion;
 use ityakutia\poll\models\PollSearch;
 use Yii;
 use uraankhayayaal\materializecomponents\imgcropper\actions\UploadAction;
@@ -12,7 +14,7 @@ use vova07\imperavi\actions\UploadFileAction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\helpers\Url;
 
 class BackController extends Controller
 {
@@ -79,10 +81,26 @@ class BackController extends Controller
         ]);
     }
 
-    public function actionView($id)
+    public function actionView($id, $question_id = null)
     {
+        $model = $this->findModel($id);
+        // $activeQuestion = PollQuestion::findOne($question_id);
+
+        $searchModel = new PollOptionSearch();
+        $searchModel->poll_id = $model->id;
+        // $searchModel->poll_question_id = $activeQuestion != null ? $activeQuestion->id : null;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('success', 'Запись успешно изменена!');
+            return $this->redirect(Url::previous());
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            // 'activeQuestion' => $activeQuestion,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -91,7 +109,7 @@ class BackController extends Controller
         $model = new Poll();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -104,7 +122,7 @@ class BackController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [

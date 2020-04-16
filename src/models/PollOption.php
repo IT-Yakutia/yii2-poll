@@ -82,4 +82,9 @@ class PollOption extends ActiveRecord
         return $this->hasOne(PollQuestion::class, ['id' => 'poll_question_id']);
     }
 
+    public function getPollVotesCount()
+    {
+        return $this->hasMany(PollVote::class, ['poll_option_id' => 'id'])->count();
+    }
+
 }

@@ -6,6 +6,13 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use ityakutia\poll\models\Poll;
 use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
+use uraankhayayaal\materializecomponents\grid\MaterialActionColumn;
+use uraankhayayaal\sortable\grid\Column;
+use yii\grid\GridView;
+use yii\grid\SerialColumn;
+
+// добавить добавление ответов с помощью jquery -> они добавляются, но сохраняются только в момент сохранения вопроса
+
 
 ?>
 
@@ -23,12 +30,25 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'poll_id')->dropDownList(ArrayHelper::map(Poll::find()->all(), 'id', 'title'), ['prompt' => 'Выберите']) ?>
+    <?php if ($model->isNewRecord) echo Html::activeHiddenInput($model, 'poll_id', ['value' => $poll->id]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn']) ?>
+        <?php if (!$model->isNewRecord) { ?>
+            <?= Html::a(
+                'Удалить вопрос',
+                ['back-question/delete'],
+                [
+                    'class' => 'btn red',
+                    'data' => [
+                        'method' => 'post',
+                        'params' => [
+                            'id' => $model->id
+                        ]
+                    ]
+                ]
+            ) ?>
+        <?php } ?>
     </div>
     <div class="fixed-action-btn">
         <?= Html::submitButton('<i class="material-icons">save</i>', [

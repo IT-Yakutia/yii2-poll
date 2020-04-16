@@ -13,7 +13,7 @@ $this->title = 'Опросы';
     <div class="row">
         <div class="col s12">
             <p>
-                <?= Html::a('Добавить', ['create'], ['class' => 'btn']) ?>
+                <?= Html::a('Добавить новый опрос', ['create'], ['class' => 'btn']) ?>
             </p>
             <div class="fixed-action-btn">
                 <?= Html::a('<i class="material-icons">add</i>', ['create'], [
@@ -42,7 +42,21 @@ $this->title = 'Опросы';
                 'filterModel' => $searchModel,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
-                    ['class' => MaterialActionColumn::class, 'template' => '{view} {update}'],
+                    [
+                        'class' => MaterialActionColumn::class,
+                        'template' => '{view} {update} {back-question/index}',
+                        'buttons' => [
+                            'back-question/index' => function($url, $model, $key) {
+                                $icon = Html::tag('i', 'add_circle', ['class' => "material-icons"]);
+                                $options = [
+                                    'title' => Yii::t('yii', 'Добавить вопросы'),
+                                    'aria-label' => Yii::t('yii', 'Добавить вопросы'),
+                                    'data-pjax' => '0',
+                                ];
+                                return Html::a($icon, $url, $options);
+                            }
+                        ]
+                    ],
 
                     [
                         'header' => 'Фото',
@@ -69,7 +83,7 @@ $this->title = 'Опросы';
                         'attribute' => 'slug',
                         'format' => 'raw',
                         'value' => function ($model) {
-                            return Html::a('<span class="grey-text">' . Yii::$app->params['domain'] . '</span>quiz/' . $model->slug, '/quiz/' . $model->slug, ['target' => "_blank"]);
+                            return Html::a('<span class="grey-text">' . Yii::$app->params['domain'] . '</span>poll/' . $model->slug, '/poll/' . $model->slug, ['target' => "_blank"]);
                         },
                     ],
                     [

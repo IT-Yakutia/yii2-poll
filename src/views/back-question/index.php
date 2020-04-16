@@ -1,26 +1,30 @@
 <?php
 
-use ityakutia\poll\models\Question;
-use ityakutia\poll\models\Vote;
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\helpers\Url;
 use uraankhayayaal\materializecomponents\grid\MaterialActionColumn;
 use uraankhayayaal\sortable\grid\Column;
-use yii\helpers\ArrayHelper;
+use yii\grid\GridView;
+use yii\grid\SerialColumn;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel common\models\AnswerSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-$this->title = 'Answers';
+$this->title = $poll->title;
 
 ?>
-<div class="answer-index">
+
+<div class="poll-quesiton-index">
     <div class="row">
         <div class="col s12">
             <p>
-                <?= Html::a('Добавить', ['create'], ['class' => 'btn']) ?>
+                <?= Html::a('Добавить вопрос', ['create'], 
+                [
+                    'class' => 'btn',
+                    'data' => [
+                        'method' => 'post',
+                        'params' => [
+                            'poll_id' => $poll->id
+                        ]
+                    ]
+                ]) ?>
             </p>
             <div class="fixed-action-btn">
                 <?= Html::a('<i class="material-icons">add</i>', ['create'], [
@@ -48,34 +52,35 @@ $this->title = 'Answers';
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
                 'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
-                    ['class' => MaterialActionColumn::class, 'template' => '{view} {update}'],
+                    ['class' => SerialColumn::class],
+                    ['class' => MaterialActionColumn::class, 'template' => '{update}'],
 
-                    //'id',
-                    'value:ntext',
-                    'free_form:ntext',
-                    //'type',
-                    //'vote_id',
+
                     [
-                        'attribute' => 'vote_id',
-                        'value' => 'vote.name',
-                        'filter' => ArrayHelper::map(Vote::find()->all(), 'id', 'name'),
+                        'attribute' => 'title',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            return Html::a($model->title, ['view', 'id' => $model->id]);
+                        }
                     ],
-                    'vote_user_id',
-                    //  'question_id',
+
                     [
-                        'attribute' => 'question_id',
-                        'value' => 'question.name',
-                        'filter' => ArrayHelper::map(Question::find()->all(), 'id', 'name'),
+                        'header' => 'Ответы',
+                        'attribute' => 'option',
+                        'format' => 'raw',
+                        'enableSorting' => true,
+                        'value' => function ($model) {
+                            return Html::a('Пунктов ответа: ' . $model->pollOptionsCount, ['back-question/update', 'id' => $model->id]);
+                        }
                     ],
-                    
+
                     [
                         'attribute' => 'is_publish',
                         'format' => 'raw',
-                        'value' => function($model){
+                        'value' => function ($model) {
                             return $model->is_publish ? '<i class="material-icons green-text">done</i>' : '<i class="material-icons red-text">clear</i>';
                         },
-                        'filter' =>[0 => 'Нет', 1 => 'Да'],
+                        'filter' => [0 => 'Нет', 1 => 'Да'],
                     ],
                     [
                         'attribute' => 'created_at',
@@ -96,8 +101,6 @@ $this->title = 'Answers';
                     'prevPageLabel' => '<i class="material-icons">chevron_left</i>',
                 ],
             ]); ?>
-
-
 
         </div>
     </div>
