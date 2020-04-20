@@ -10,6 +10,8 @@ $this->title = 'Редактирование: ' . $model->poll->title . ' | ' . 
 		<div class="col s12">
 			<?= $this->render('_form', [
 				'model' => $model,
+				'dataProvider' => $dataProvider,
+				'searchModel' => $searchModel,
 			]) ?>
 		</div>
 	</div>

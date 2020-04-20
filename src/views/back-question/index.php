@@ -55,7 +55,6 @@ $this->title = $poll->title;
                     ['class' => SerialColumn::class],
                     ['class' => MaterialActionColumn::class, 'template' => '{update}'],
 
-
                     [
                         'attribute' => 'title',
                         'format' => 'raw',
