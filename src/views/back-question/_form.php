@@ -13,8 +13,11 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
     ]); ?>
 
     <div class="row">
-        <div class="col s12 m6">
+        <div class="col s12 m2">
             <?= WCheckbox::widget(['model' => $model, 'attribute' => 'is_publish']); ?>
+        </div>
+        <div class="col s12 m2">
+            <?= WCheckbox::widget(['model' => $model, 'attribute' => 'type']); ?>
         </div>
     </div>
 

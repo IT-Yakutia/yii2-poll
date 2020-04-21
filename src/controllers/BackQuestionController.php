@@ -54,9 +54,12 @@ class BackQuestionController extends Controller
         ]);
     }
 
-    public function actionCreate()
+    public function actionCreate($poll_id)
     {
         $model = new PollQuestion();
+        $poll = Poll::findOne($poll_id);
+
+        // var_dump(Yii::$app->request->post());
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->poll_id]);
@@ -64,6 +67,7 @@ class BackQuestionController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'poll' => $poll
         ]);
     }
 
@@ -80,15 +84,15 @@ class BackQuestionController extends Controller
         ]);
     }
 
-    public function actionDelete()
+    public function actionDelete($id)
     {
-        $data = Yii::$app->request->post();
-        $model = $this->findModel((int) $data['id']);
+        $model = $this->findModel($id);
+        $poll = $model->poll_id;
         if (false !== $model->delete()) {
             Yii::$app->session->setFlash('success', 'Запись успешно удалена!');
         }
 
-        return $this->redirect(['back/view', 'id' => $data['PollQuestion']['poll_id']]);
+        return $this->redirect(['index', 'id' => $poll]);
     }
 
     protected function findModel($id)

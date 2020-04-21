@@ -55,7 +55,7 @@ class PollQuestion extends ActiveRecord
     {
         return [
             [['title', 'poll_id'], 'required'],
-            [['sort', 'poll_id', 'is_publish', 'status', 'created_at', 'updated_at'], 'integer'],
+            [['sort', 'poll_id', 'is_publish', 'type', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['poll_id'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['poll_id' => 'id']],
             [['options'], 'safe'],
@@ -70,8 +70,9 @@ class PollQuestion extends ActiveRecord
         return [
             'id' => 'ID',
             'title' => Yii::t('app','Вопрос'),
-            'description' => Yii::t('app','описание'),
+            'description' => Yii::t('app','Описание'),
             'sort' => 'Sort',
+            'type' => Yii::t('app', 'Несколько из списка'),
             'poll_id' => Yii::t('app','Опрос'),
             'is_publish' => Yii::t('app','Опубликовать'),
             'status' => 'Status',

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Редактирование: ' . $model->poll->title . ' | ' . $model->title;
+$this->title = $model->poll->title . ' | редактирование: ' . $model->title;
 
 ?>
 <div class="poll-question-update">

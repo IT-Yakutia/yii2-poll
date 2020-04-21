@@ -15,16 +15,14 @@ $this->title = $poll->title;
     <div class="row">
         <div class="col s12">
             <p>
-                <?= Html::a('Добавить вопрос', ['create'], 
-                [
-                    'class' => 'btn',
-                    'data' => [
-                        'method' => 'post',
-                        'params' => [
-                            'poll_id' => $poll->id
-                        ]
+                <?= Html::a(
+                    'Добавить вопрос',
+                    ['create'],
+                    [
+                        'class' => 'btn',
+                        'data' => ['method' => 'get', 'params' => ['poll_id' => $poll->id]]
                     ]
-                ]) ?>
+                ) ?>
             </p>
             <div class="fixed-action-btn">
                 <?= Html::a('<i class="material-icons">add</i>', ['create'], [
@@ -32,6 +30,7 @@ $this->title = $poll->title;
                     'title' => 'Сохранить',
                     'data-position' => "left",
                     'data-tooltip' => "Добавить",
+                    'data' => ['method' => 'get', 'params' => ['poll_id' => $poll->id]]
                 ]) ?>
             </div>
 
@@ -59,7 +58,7 @@ $this->title = $poll->title;
                         'attribute' => 'title',
                         'format' => 'raw',
                         'value' => function ($model) {
-                            return Html::a($model->title, ['view', 'id' => $model->id]);
+                            return Html::a($model->title, ['update', 'id' => $model->id]);
                         }
                     ],
 
@@ -69,7 +68,7 @@ $this->title = $poll->title;
                         'format' => 'raw',
                         'enableSorting' => true,
                         'value' => function ($model) {
-                            return Html::a('Пунктов ответа: ' . $model->pollOptionsCount, ['back-question/update', 'id' => $model->id]);
+                            return Html::a('Пунктов ответа: ' . $model->pollOptionsCount, ['update', 'id' => $model->id]);
                         }
                     ],
 
@@ -81,6 +80,16 @@ $this->title = $poll->title;
                         },
                         'filter' => [0 => 'Нет', 1 => 'Да'],
                     ],
+
+                    [
+                        'attribute' => 'type',
+                        'format' => 'raw',
+                        'value' => function ($model) {
+                            return $model->type ? '<i class="material-icons green-text">done</i>' : '<i class="material-icons red-text">clear</i>';
+                        },
+                        'filter' => [0 => 'Нет', 1 => 'Да'],
+                    ],
+
                     [
                         'attribute' => 'created_at',
                         'format' => 'datetime',
