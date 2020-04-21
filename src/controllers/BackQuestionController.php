@@ -31,12 +31,12 @@ class BackQuestionController extends Controller
         ];
     }
 
-    public function actionIndex()
+    public function actionIndex($id)
     {
         // var_dump(Yii::$app->request->queryParams);
         $searchModel = new PollQuestionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $poll = Poll::findOne(Yii::$app->request->queryParams['id']);
+        $poll = Poll::findOne($id);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -54,9 +54,10 @@ class BackQuestionController extends Controller
         ]);
     }
 
-    public function actionCreate()
+    public function actionCreate($poll_id)
     {
         $model = new PollQuestion();
+        $poll = Poll::findOne($poll_id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->poll_id]);
@@ -64,6 +65,7 @@ class BackQuestionController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'poll' => $poll
         ]);
     }
 

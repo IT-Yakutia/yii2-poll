@@ -10,6 +10,7 @@ $this->title = $poll->title. ': Создание нового вопроса';
         <div class="col s12">
 		    <?= $this->render('_form', [
 				'model' => $model,
+				'poll' => $id
 		    ]) ?>
 		</div>
 	</div>

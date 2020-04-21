@@ -15,16 +15,7 @@ $this->title = $poll->title;
     <div class="row">
         <div class="col s12">
             <p>
-                <?= Html::a('Добавить вопрос', ['create'], 
-                [
-                    'class' => 'btn',
-                    'data' => [
-                        'method' => 'post',
-                        'params' => [
-                            'poll_id' => $poll->id
-                        ]
-                    ]
-                ]) ?>
+                <?= Html::a('Добавить вопрос', ['create', 'poll_id' => $poll->id], ['class' => 'btn']) ?>
             </p>
             <div class="fixed-action-btn">
                 <?= Html::a('<i class="material-icons">add</i>', ['create'], [
