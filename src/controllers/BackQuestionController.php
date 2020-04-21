@@ -57,28 +57,19 @@ class BackQuestionController extends Controller
     public function actionCreate()
     {
         $model = new PollQuestion();
-        $searchModel = new PollOptionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if (isset(Yii::$app->request->post()['PollQuestion'])) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['index', 'id' => $model->poll_id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['index', 'id' => $model->poll_id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'poll' => Poll::findOne(Yii::$app->request->post()['poll_id']),
-            // 'searchModel' => $searchModel,
-            // 'dataProvider' => $dataProvider
         ]);
     }
 
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $searchModel = new PollOptionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index', 'id' => $model->poll->id]);
@@ -86,8 +77,6 @@ class BackQuestionController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider
         ]);
     }
 

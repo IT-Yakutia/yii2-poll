@@ -1,35 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
-use ityakutia\poll\models\Poll;
 use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
-use uraankhayayaal\materializecomponents\grid\MaterialActionColumn;
-use uraankhayayaal\sortable\grid\Column;
-use yii\grid\GridView;
-use yii\grid\SerialColumn;
-use yii\widgets\Pjax;
-
-// для временных тестов
-$options = [['id' => 1, 'title' => 'ну вот и что, ну вот и всё'], ['id' => 2, 'title' => 'пример номер 2']];
-
-$savedOptions = [];
-$savedOptionsCount = 0;
-$deleteOptions = [];
-foreach ($options as $key => $option) {
-    $savedOptions[] =
-        '<div class="col s12 m6 l4" id="optionCard' . $key . '" data-option="' . $option['id']/*->id*/ . '">'
-        . '<div class="card">'
-        . '<div class="card-content">'
-        . '<p style="word-wrap: break-word"><a href="#!" id="optionDelete' . $key . '" onClick="deleteOption(' . $key . ')" class="secondary-content tooltipped" data-position="top" data-tooltip="Удалить ответ"><i id="optionUpdate' . $key . '" onClick="updateOption(' . $key . ')" class="material-icons right">delete</i></a><a href="#!" class="secondary-content tooltipped modal-trigger" data-position="top" data-tooltip="Редактировать ответ"><i class="material-icons right">edit</i></a><span class="optionTitle">' . $option['title']/*->title*/ . '</span></p>'
-        . '</div>'
-        . '</div>'
-        . '</div>';
-    $savedOptionsCount++;
-}
-$savedOptions = implode('', $savedOptions);
 
 ?>
 
@@ -50,102 +23,69 @@ $savedOptions = implode('', $savedOptions);
     <?php if ($model->isNewRecord) echo Html::activeHiddenInput($model, 'poll_id', ['value' => $poll->id]) ?>
 
     <div class="row">
-        <div class="col m12">
+        <div class="col s12 m10 l8">
             <h5>Варианты ответов:</h5>
         </div>
 
-        <div class="col m12">
-            <div class="row" id="optionCards">
-                <?= $savedOptions ?>
-            </div>
-        </div>
-
-        <div class="col m12">
-            <div class="row">
-                <div class="input-field col s8 m6 l6">
-                    <textarea id="optionInput" class="materialize-textarea" maxlength="255"></textarea>
-                    <label for="optionInput" id="optionLabel">Добавьте новый ответ</label>
+        <div class="col s12 m10 l8 options-wrapper">
+            <?php $number = 1; ?>
+            <?php foreach ($model->pollOptions as $key => $option) { ?>
+                <?php $row_key = $key +1; ?>
+                <div class="form-group custom-poll-question-option" data-id="<?= $row_key ?>">
+                    <input name="<?= Html::getInputName($model, 'options'); ?>[<?= $row_key ?>][id]" id="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-id" type="hidden" value="<?= $option->id; ?>">
+                    <label class="control-label active" for="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-title">Вариант ответа <?= $row_key ?></label>
+                    <input type="text" id="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-title" class="form-control" name="<?= Html::getInputName($model, 'options'); ?>[<?= $row_key ?>][title]" value="<?= $option->title?>" maxlength="255" aria-required="true">
+                    <div class="help-block"></div>
                 </div>
-                <div class="col s4 l4">
-                    <a class="waves-effect waves-light btn" id="optionSubmit">Добавить</a>
-                </div>
+            <?php } ?>
+            <?php $next_key = isset($row_key) ? ($number + $row_key) : $number; ?>
+            <div class="form-group custom-poll-question-option" data-id="<?= $next_key ?>">
+                <label class="control-label active" for="<?= Html::getInputId($model, 'options'); ?>-<?= $next_key ?>-title">Вариант ответа <?= $next_key ?></label>
+                <input type="text" id="<?= Html::getInputId($model, 'options'); ?>-<?= $next_key ?>-title" class="form-control" name="<?= Html::getInputName($model, 'options'); ?>[<?= $next_key ?>][title]" maxlength="255" aria-required="true">
+                <div class="help-block"></div>
             </div>
         </div>
     </div>
 
-    <?php
+<?php
+$inputName = Html::getInputName($model, 'options');
+$inputId = Html::getInputId($model, 'options');
 
-    $script = <<< JS
-
-        // удаление 
-        window.deleteOption = function(id) {
-            let option = 'optionCard' + id;
-            document.getElementById(option).remove();
+$script = <<< JS
+    function CheckToAddNewRow(optopn_input) {
+        var options_wrapper = $(optopn_input).closest('.options-wrapper');
+        var custom_poll_question_option = $(optopn_input).closest('.custom-poll-question-option');
+        var data_id = custom_poll_question_option.data('id');
+        var inputName = "$inputName";
+        var inputId = "$inputId";
+        data_id = data_id+1;
+        if($(custom_poll_question_option).is(':last-child'))
+        {
+            options_wrapper.append(`
+                <div class="form-group custom-poll-question-option" data-id="`+data_id+`">
+                    <label class="control-label active" for="${inputId}-`+data_id+`-title">Вариант ответа `+data_id+`</label>
+                    <input type="text" id="${inputId}-`+data_id+`-title" class="form-control" name="${inputName}[`+data_id+`][title]" maxlength="255" aria-required="true">
+                    <div class="help-block"></div>
+                </div>
+            `);
         }
+    }
+    $(window).keyup(function(e) {
+        if ( $(e.target).is('.custom-poll-question-option input') ){
+            CheckToAddNewRow(e.target);
+        }
+    });
+    
+JS;
 
-        // ввод текста
-        $('#optionInput').keyup(function() {
-            var textLen = maxLength - $(this).val().length;
-            $('#optionLabel').html('Осталось символов:' + textLen);
-        });
+$this->registerJs($script, $this::POS_READY);
 
-        var maxLength = 255;
-        var optionId = $savedOptionsCount;
-
-        //  добавление нового блока
-        $('#optionSubmit').on('click', function() {
-            var input = $('#optionInput').val();
-            if(input != '') {
-                $('#optionCards').append(
-                    '<div class="col s12 m6 l4" id="optionCard' + optionId + '">' + 
-                        '<div class="card">' + 
-                            '<div class="card-content">' +
-                                '<p style="word-wrap: break-word">' + 
-                                    '<a href="#!" id="optionDelete' + optionId + '" onClick="deleteOption(' + optionId +')" class="secondary-content tooltipped" data-position="top" data-tooltip="Удалить ответ">' +
-                                        '<i class="material-icons right">delete</i>' +
-                                    '</a>' +
-                                    '<a href="#!" id="optionUpdate' + optionId + '" onClick="updateOption(' + optionId +')" class="secondary-content tooltipped" data-position="top" data-tooltip="Редактировать ответ">' +
-                                        '<i class="material-icons right">edit</i>' +
-                                    '</a>' +
-                                    '<span class="optionTitle">' + input + '</span>' +
-                                '</p>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>'
-                );
-
-
-                $('#optionInput').val('');
-                textLen = 255;
-                $('#optionLabel').html('Осталось символов: ' + textLen);
-                optionId++;
-            }
-        });
-    JS;
-
-    $this->registerJs($script, $this::POS_READY);
-
-    ?>
+?>
 
     <div class="row">
         <div class="col 12">
             <div class="form-group">
                 <?= Html::submitButton('Сохранить', ['class' => 'btn']) ?>
-                <?php if (!$model->isNewRecord) { ?>
-                    <?= Html::a(
-                        'Удалить вопрос',
-                        ['back-question/delete'],
-                        [
-                            'class' => 'btn red',
-                            'data' => [
-                                'method' => 'post',
-                                'params' => [
-                                    'id' => $model->id
-                                ]
-                            ]
-                        ]
-                    ) ?>
-                <?php } ?>
             </div>
         </div>
     </div>

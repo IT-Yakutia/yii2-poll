@@ -28,6 +28,8 @@ use uraankhayayaal\sortable\behaviors\Sortable;
  */
 class PollQuestion extends ActiveRecord
 {
+    public $options = [];
+
     public function behaviors()
     {
         return [
@@ -56,6 +58,7 @@ class PollQuestion extends ActiveRecord
             [['sort', 'poll_id', 'is_publish', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title'], 'string', 'max' => 255],
             [['poll_id'], 'exist', 'skipOnError' => true, 'targetClass' => Poll::class, 'targetAttribute' => ['poll_id' => 'id']],
+            [['options'], 'safe'],
         ];
     }
 
@@ -75,6 +78,39 @@ class PollQuestion extends ActiveRecord
             'created_at' => Yii::t('app','Создан'),
             'updated_at' => Yii::t('app','Изменен'),
         ];
+    }
+
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+        $this->saveItems();
+    }
+
+    protected function saveItems(){
+        $hasErrors = false;
+        foreach ($this->options as $key => $item) {
+            if( $item['title'] == null ){
+                if(isset($item['id']))
+                    PollOption::findOne($item['id'])->delete();
+                continue;
+            };
+            $model = new PollOption();
+            // Check is model a new record
+            if(isset($item['id'])){
+                $query = PollOption::find()->where(['id' => $item['id'], 'poll_question_id' => $this->id]);
+                if($query->exists()){
+                    $model = $query->one();
+                }
+            }
+            $model->title = $item['title'];
+            $model->sort = isset($item['sort']) ? $item['sort'] : null;
+            $model->poll_question_id = $this->id;
+            if($model->validate()){
+                $model->save();
+            }else{
+                $hasErrors = true;
+            }
+        }
+        return !$hasErrors;
     }
 
     /**
