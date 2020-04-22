@@ -3,7 +3,6 @@
 namespace ityakutia\poll\controllers;
 
 use ityakutia\poll\models\Poll;
-use ityakutia\poll\models\PollOptionSearch;
 use Yii;
 use ityakutia\poll\models\PollQuestion;
 use ityakutia\poll\models\PollQuestionSearch;

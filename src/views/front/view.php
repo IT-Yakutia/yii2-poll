@@ -1,28 +1,33 @@
 <?php
 
-$this->title = 'Первый опрос';
+use yii\helpers\Html;
+
+$this->title = $model->title;
 
 ?>
 
 <div class="poll" data-id="<?= $model->id ?>">
     <form action="#">
-        <?php foreach ($model->questions as $key => $question) { ?>
+        <?php foreach ($model->pollQuestions as $key => $question) { ?>
             <div class="question" data-id="<?= $question->id ?>">
                 <h3><?= $question->title ?></h3>
                 <div class="options">
-                    <?php foreach ($question->options as $key => $option) { ?>
+                    <?php foreach ($question->pollOptions as $key => $option) { ?>
                         <div class="option" data-id="<?= $option->id ?>">
-                            <?php if($option->is_multi_select) { ?>    
-                                <input id="<?= $poll->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $poll->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="checkbox">
+                            <?php if($question->is_multi_select) { ?>    
+                                <input id="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $model->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="checkbox">
                             <?php }else{ ?>
-                                <input id="<?= $poll->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $poll->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="radio">
+                                <input id="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $model->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="radio">
                             <?php } ?>
-                            <label for="<?= $poll->id ?>-<?= $question->id ?>-<?= $option->id ?>"><?= $option->lable ?></label>
+                            <label for="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>"><?= $option->title ?></label>
                         </div>
                     <?php } ?>
                 </div>
             </div>
         <?php } ?>
+
+        <?= Html::hiddenInput('id', $model->id) ?>
+        
         <p><input type="submit" value="Отправить"></p>
     </form>
 </div>

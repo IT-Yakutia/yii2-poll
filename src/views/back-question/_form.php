@@ -17,7 +17,7 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
             <?= WCheckbox::widget(['model' => $model, 'attribute' => 'is_publish']); ?>
         </div>
         <div class="col s12 m2">
-            <?= WCheckbox::widget(['model' => $model, 'attribute' => 'type']); ?>
+            <?= WCheckbox::widget(['model' => $model, 'attribute' => 'is_multi_select']); ?>
         </div>
     </div>
 

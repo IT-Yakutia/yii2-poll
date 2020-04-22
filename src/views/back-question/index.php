@@ -82,10 +82,10 @@ $this->title = $poll->title;
                     ],
 
                     [
-                        'attribute' => 'type',
+                        'attribute' => 'is_multi_select',
                         'format' => 'raw',
                         'value' => function ($model) {
-                            return $model->type ? '<i class="material-icons green-text">done</i>' : '<i class="material-icons red-text">clear</i>';
+                            return $model->is_multi_select ? '<i class="material-icons green-text">done</i>' : '<i class="material-icons red-text">clear</i>';
                         },
                         'filter' => [0 => 'Нет', 1 => 'Да'],
                     ],

@@ -84,11 +84,9 @@ class BackController extends Controller
     public function actionView($id, $question_id = null)
     {
         $model = $this->findModel($id);
-        // $activeQuestion = PollQuestion::findOne($question_id);
 
         $searchModel = new PollOptionSearch();
         $searchModel->poll_id = $model->id;
-        // $searchModel->poll_question_id = $activeQuestion != null ? $activeQuestion->id : null;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -98,7 +96,6 @@ class BackController extends Controller
 
         return $this->render('view', [
             'model' => $model,
-            // 'activeQuestion' => $activeQuestion,
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\GridView;
 use scotthuangzl\googlechart\GoogleChart;
+use miloschuman\highcharts\Highcharts;
 
 $this->title = 'Результаты опроса: ' . $model->title;
 
@@ -15,7 +16,7 @@ $this->title = 'Результаты опроса: ' . $model->title;
 <div class="poll-view">
 
     <div class="row">
-        <div class="col s12 m12">
+        <div class="col s8 m8">
             <?php
             $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
             foreach ($questions as $question) {
@@ -23,51 +24,34 @@ $this->title = 'Результаты опроса: ' . $model->title;
                 $options = $question->pollOptions;
                 // var_dump($options);
                 $series = [];
-                // $series[] = array('Task', 'Hours per Day');
+                
+                $seriesOptions = [];
                 foreach ($options as $option) {
-                    $series[] = [$option->title, (int) $option->pollVotesCount];
+                    $seriesOptions[$option->title] = (int) $option->pollVotesCount;
                 }
 
                 ?>
-                    
+                                    
                 <?php
                 // var_dump($series); die;
 
-                echo \onmotion\apexcharts\ApexchartsWidget::widget([
-                    'type' => 'bar', // default area
-                    'height' => '400', // default 350
-                    'width' => '500', // default 100%
-                    'chartOptions' => [
-                        'chart' => [
-                            'toolbar' => [
-                                'show' => true,
-                                'autoSelected' => 'zoom'
-                            ],
-                        ],
-                        'xaxis' => [
-                            'type' => 'datetime',
-                            // 'categories' => $categories,
-                        ],
-                        'plotOptions' => [
-                            'bar' => [
-                                'horizontal' => false,
-                                'endingShape' => 'rounded'
-                            ],
-                        ],
-                        'dataLabels' => [
-                            'enabled' => false
-                        ],
-                        'stroke' => [
-                            'show' => true,
-                            'colors' => ['transparent']
-                        ],
-                        'legend' => [
-                            'verticalAlign' => 'bottom',
-                            'horizontalAlign' => 'left',
-                        ],
-                    ],
-                    'series' => $series
-                ]);
+                echo Highcharts::widget([
+                    'options' => [
+                        'chart' => ['type' => 'column'],
+                       'title' => ['text' => $question->title],
+                       'plotOptions' => ['series' => ['stacking' => 'normal']],
+                       'xAxis' => [
+                          'categories' => array_keys($seriesOptions)
+                       ],
+                       'yAxis' => [
+                          'title' => ['text' => 'Количество'],
+                          'allowDecimals' => false
+                       ],
+                       'series' => [
+                          ['name' => 'Количество голосов', 'colorByPoint' => true, 'data' => array_values($seriesOptions)],
+                       ]
+                    ]
+                 ]);
             }
             ?>
         </div>

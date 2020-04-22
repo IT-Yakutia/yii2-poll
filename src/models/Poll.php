@@ -30,6 +30,7 @@ use yii\db\ActiveRecord;
  */
 class Poll extends ActiveRecord
 {
+    public $pollAnswers = [];
 
     public function behaviors()
     {
@@ -100,5 +101,15 @@ class Poll extends ActiveRecord
     public function getPollQuestions()
     {
         return $this->hasMany(PollQuestion::class, ['poll_id' => 'id']);
+    }
+
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+        $this->saveItems();
+    }
+
+    protected function saveItems()
+    {
+        
     }
 }
