@@ -20,11 +20,8 @@ $this->title = 'Результаты опроса: ' . $model->title;
             <?php
             $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
             foreach ($questions as $question) {
-                // var_dump($question);
                 $options = $question->pollOptions;
-                // var_dump($options);
                 $series = [];
-                
                 $seriesOptions = [];
                 foreach ($options as $option) {
                     $seriesOptions[$option->title] = (int) $option->pollVotesCount;
@@ -33,7 +30,6 @@ $this->title = 'Результаты опроса: ' . $model->title;
                 ?>
                                     
                 <?php
-                // var_dump($series); die;
 
                 echo Highcharts::widget([
                     'options' => [
@@ -44,7 +40,7 @@ $this->title = 'Результаты опроса: ' . $model->title;
                           'categories' => array_keys($seriesOptions)
                        ],
                        'yAxis' => [
-                          'title' => ['text' => 'Количество'],
+                          'title' => ['text' => 'Ответы'],
                           'allowDecimals' => false
                        ],
                        'series' => [
