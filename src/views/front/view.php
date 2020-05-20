@@ -17,7 +17,7 @@ $this->title = $model->title;
                             <?php if($question->is_multi_select) { ?>    
                                 <input id="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $model->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="checkbox">
                             <?php }else{ ?>
-                                <input id="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $model->id ?>][<?= $question->id ?>][<?= $option->id ?>]" type="radio">
+                                <input id="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>" name="answer[<?= $model->id ?>][<?= $question->id ?>][radio]" value="<?= $option->id ?>" type="radio">
                             <?php } ?>
                             <label for="<?= $model->id ?>-<?= $question->id ?>-<?= $option->id ?>"><?= $option->title ?></label>
                         </div>
