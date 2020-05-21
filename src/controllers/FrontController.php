@@ -50,10 +50,10 @@ class FrontController extends Controller
                 if ($id != $poll_id) {
                     break;
                 }
-                
+
                 foreach ($questions as $options) {
-                    $options = array_keys($options);
-                    foreach ($options as $option) {
+                    foreach ($options as $key => $value) {
+                        $option = $key === 'radio' ? $value : $key;
                         $pollVote = new PollVote();
                         $pollVote->poll_option_id = $option;
                         $pollVote->save();
@@ -61,7 +61,7 @@ class FrontController extends Controller
                 }
 
                 $date = strtotime(date('Y-m-d H:i:s', strtotime('+1 month')));
-                Yii::$app->response->cookies->add(new Cookie(['name' => "poll_voted_$id", 'value' => 1,'expire' => $date]));
+                Yii::$app->response->cookies->add(new Cookie(['name' => "poll_voted_$id", 'value' => 1, 'expire' => $date]));
 
                 return $this->render($thanks, [
                     'model' => $model,
