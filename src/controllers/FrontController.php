@@ -16,10 +16,12 @@ class FrontController extends Controller
 
     public function actionIndex()
     {
+        $view = Yii::$app->params['custom_view_for_modules']['poll_front']['index'] ?? 'index';
+
         $searchModel = new PollSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render($view, [
             'dataProvider' => $dataProvider
             // 'model' => $this->findModel($id)
         ]);
@@ -27,6 +29,9 @@ class FrontController extends Controller
 
     public function actionView($id)
     {
+        $view = Yii::$app->params['custom_view_for_modules']['poll_front']['view'] ?? 'view';
+        $thanks = Yii::$app->params['custom_view_for_modules']['poll_front']['thanks'] ?? 'thanks';
+
         $model = $this->findModel($id);
 
         $answer = Yii::$app->request->get()['answer'];
@@ -34,7 +39,7 @@ class FrontController extends Controller
 
         if($is_voted) {
             // var_dump($is_voted);
-            return $this->render('thanks', [
+            return $this->render($thanks, [
                 'model' => $model,
                 'is_voted' => true
             ]);
@@ -58,14 +63,14 @@ class FrontController extends Controller
                 $date = strtotime(date('Y-m-d H:i:s', strtotime('+1 month')));
                 Yii::$app->response->cookies->add(new Cookie(['name' => "poll_voted_$id", 'value' => 1,'expire' => $date]));
 
-                return $this->render('thanks', [
+                return $this->render($thanks, [
                     'model' => $model,
                     'is_voted' => false
                 ]);
             }
         }
 
-        return $this->render('view', [
+        return $this->render($view, [
             'model' => $model
         ]);
     }
