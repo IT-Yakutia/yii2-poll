@@ -34,7 +34,7 @@ class FrontController extends Controller
 
         $model = $this->findModel($id);
 
-        $answer = Yii::$app->request->get()['answer'];
+        $answer = Yii::$app->request->get('answer');
         $is_voted = Yii::$app->request->cookies->getValue("poll_voted_$id", false);
 
         if($is_voted) {
