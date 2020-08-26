@@ -9,7 +9,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
-```
+```sh
 php composer.phar require --prefer-dist it-yakutia/yii2-poll "*"
 ```
 
@@ -23,7 +23,7 @@ to the require section of your `composer.json` file.
 
 Add migration path in your console config file:
 
-```
+```php
 'migrationPath' => [
     ...
     '@vendor/it-yakutia/poll/src/migrations',
