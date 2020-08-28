@@ -15,7 +15,7 @@ php composer.phar require --prefer-dist it-yakutia/yii2-poll "*"
 
 or add
 
-```
+```json
 "it-yakutia/yii2-poll": "*"
 ```
 
@@ -24,10 +24,16 @@ to the require section of your `composer.json` file.
 Add migration path in your console config file:
 
 ```php
-'migrationPath' => [
+'controllerMap' => [
     ...
-    '@vendor/it-yakutia/poll/src/migrations',
-],
+    'migrate' => [
+    ...
+        'migrationPath' => [
+            ...
+            '@vendor/it-yakutia/poll/src/migrations',
+        ],
+    ],
+]
 ```
 
 Usage
@@ -37,4 +43,10 @@ Once the extension is installed, simply use it in your code by  :
 
 ```php
 <?= Url::toRoute(['/poll/poll/index']); ?>
+```
+
+Add RBAC roles:
+
+```
+poll
 ```
