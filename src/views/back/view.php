@@ -1,13 +1,10 @@
 <?php
 
+use dosamigos\chartjs\ChartJs;
+use Faker\Factory;
 use ityakutia\poll\models\PollQuestion;
-use uraankhayayaal\sortable\grid\Column;
-use uraankhayayaal\materializecomponents\grid\MaterialActionColumn;
+use practically\chartjs\Chart;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\GridView;
-use scotthuangzl\googlechart\GoogleChart;
-use miloschuman\highcharts\Highcharts;
 
 $this->title = 'Результаты опроса: ' . $model->title;
 
@@ -18,37 +15,40 @@ $this->title = 'Результаты опроса: ' . $model->title;
     <div class="row">
         <div class="col s8 m8">
             <?php
+
+            $faker = Factory::create();
+
             $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
-            foreach ($questions as $question) {
-                $options = $question->pollOptions;
-                $series = [];
-                $seriesOptions = [];
-                foreach ($options as $option) {
-                    $seriesOptions[$option->title] = (int) $option->pollVotesCount;
+            if (!empty($questions)) {
+                foreach ($questions as $question) {
+                    echo Html::a("<h6>$question->title</h6>", ['back-question/update', 'id' => $question->id]);
+
+                    $data = [
+                        'type' => 'bar',
+                        'data' => [
+                            'labels' => [''],
+                            'datasets' => []
+                        ],
+                    ];
+
+                    $datasets = [];
+
+                    $options = $question->pollOptions;
+                    if (!empty($options)) {
+                        foreach ($options as $option) {
+                            $set = [];
+                            $set['data'][] = $option->pollVotesCount;
+                            $set['backgroundColor'][] = $faker->rgbCssColor;
+                            $set['label'] = $option->title;
+                            $datasets[] = $set;
+                        }
+                    }
+
+                    $data['data']['datasets'] = $datasets;
+                    echo ChartJs::widget($data);
                 }
-
-                ?>
-                                    
-                <?php
-
-                echo Highcharts::widget([
-                    'options' => [
-                        'chart' => ['type' => 'column'],
-                       'title' => ['text' => $question->title],
-                       'plotOptions' => ['series' => ['stacking' => 'normal']],
-                       'xAxis' => [
-                          'categories' => array_keys($seriesOptions)
-                       ],
-                       'yAxis' => [
-                          'title' => ['text' => 'Ответы'],
-                          'allowDecimals' => false
-                       ],
-                       'series' => [
-                          ['name' => 'Количество голосов', 'colorByPoint' => true, 'data' => array_values($seriesOptions)],
-                       ]
-                    ]
-                 ]);
             }
+
             ?>
         </div>
     </div>

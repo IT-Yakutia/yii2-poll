@@ -50,3 +50,15 @@ Add RBAC roles:
 ```
 poll
 ```
+
+Add fixtures:
+
+```sh
+php yii fixture PollVote --namespace='ityakutia\poll\tests\fixtures'
+```
+
+Add fixtures in docker:
+
+```sh
+php yii fixture PollVote --namespace='ityakutia\poll\tests\fixtures' --interactive=0
+```

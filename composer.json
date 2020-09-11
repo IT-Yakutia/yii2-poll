@@ -15,7 +15,7 @@
         "uraankhayayaal/yii2-sortable": "*",
         "uraankhayayaal/yii2-materializecomponents": "*",
         "uraankhayayaal/yii2-redactor": "*",
-        "miloschuman/yii2-highcharts-widget": "^8.0"
+        "2amigos/yii2-chartjs-widget" : "~2.0"
     },
     "extra": {
         "bootstrap": "ityakutia\\poll\\Bootstrap"
