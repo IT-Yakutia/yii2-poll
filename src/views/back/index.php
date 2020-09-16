@@ -83,7 +83,7 @@ $this->title = 'Опросы';
                         'attribute' => 'slug',
                         'format' => 'raw',
                         'value' => function ($model) {
-                            return Html::a('<span class="grey-text">' . Yii::$app->params['domain'] . '</span>poll/front/view?id=' . $model->id, '/poll/front/view?id=' . $model->id, ['target' => "_blank"]);
+                            return Html::a('<span class="grey-text">' . Yii::$app->params['domain'] . '</span>poll/' . $model->slug, '/poll/' . $model->slug, ['target' => "_blank"]);
                         },
                     ],
                     [

@@ -67,7 +67,7 @@ class Poll extends ActiveRecord
             [['title'], 'required'],
             [['sort', 'is_publish', 'status', 'created_at', 'updated_at'], 'integer'],
             [['title', 'photo', 'slug', 'meta_description', 'meta_keywords'], 'string', 'max' => 255],
-            ['slug', 'unique'],
+            [['slug', 'title'], 'unique'],
             ['description', 'string']
         ];
     }
