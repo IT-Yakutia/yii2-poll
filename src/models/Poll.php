@@ -103,7 +103,8 @@ class Poll extends ActiveRecord
         return $this->hasMany(PollQuestion::class, ['poll_id' => 'id']);
     }
 
-    public function afterSave($insert, $changedAttributes){
+    public function afterSave($insert, $changedAttributes) {
+        // var_dump($changedAttributes); die;
         parent::afterSave($insert, $changedAttributes);
         $this->saveItems();
     }

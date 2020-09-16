@@ -27,15 +27,15 @@ class FrontController extends Controller
         ]);
     }
 
-    public function actionView($id)
+    public function actionView($slug)
     {
         $view = Yii::$app->params['custom_view_for_modules']['poll_front']['view'] ?? 'view';
         $thanks = Yii::$app->params['custom_view_for_modules']['poll_front']['thanks'] ?? 'thanks';
 
-        $model = $this->findModel($id);
+        $model = $this->findModel($slug);
 
         $answer = Yii::$app->request->get('answer');
-        $is_voted = Yii::$app->request->cookies->getValue("poll_voted_$id", false);
+        $is_voted = Yii::$app->request->cookies->getValue("poll_voted_$model->id", false);
 
         if($is_voted) {
             // var_dump($is_voted);
@@ -75,12 +75,13 @@ class FrontController extends Controller
         ]);
     }
 
-    protected function findModel($id)
+    protected function findModel($slug)
     {
-        if (($model = Poll::findOne($id)) !== null) {
-            return $model;
+        $model = Poll::find()->where(['slug' => $slug])->one();
+        if($model === null) {
+            throw new NotFoundHttpException('The requested page does not exist.');
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return $model;        
     }
 }

@@ -24,18 +24,18 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'slug')->textInput(['maxlength' => true])->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'slug')->textInput(['maxlength' => true])//->hiddenInput()->label(false) ?>
 
     <?php if (!$model->isNewRecord) { ?>
         <div class="input-field">
-            <input disabled value="<?= '/poll/front/view?id=' . $model->id ?>" id="disabled" type="text" class="validate">
+            <input disabled value="<?= '/poll/' . $model->slug ?>" id="disabled" type="text" class="validate">
             <label for="disabled">Относительный url страницы</label>
         </div>
 
         <div class="input-field">
-            <input disabled value="<?= Yii::$app->params['domain'] . 'poll/front/view?id=' . $model->id ?>" id="disabled" type="text" class="validate">
+            <input disabled value="<?= Yii::$app->params['domain'] . 'poll/' . $model->slug ?>" id="disabled" type="text" class="validate">
             <label for="disabled">Абсолютный url страницы</label>
-            <?= Html::a("Перейти", '/poll/front/view?id=' . $model->id, ['target' => "_blank"]) ?>
+            <?= Html::a("Перейти", '/poll/' . $model->slug, ['target' => "_blank"]) ?>
         <?php } ?>
 
         <?= $form->field($model, 'photo')->widget(Cropper::class, [
