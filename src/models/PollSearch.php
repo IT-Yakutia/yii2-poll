@@ -21,10 +21,11 @@ class PollSearch extends Poll
         return Model::scenarios();
     }
 
-    public function search($params)
+    public function search($params, $front = false)
     {
-        $query = Poll::find();
 
+        $query = !$front ? Poll::find() : Poll::find()->where(['is_publish' => 1]);
+        
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

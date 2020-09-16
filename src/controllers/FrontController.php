@@ -19,7 +19,7 @@ class FrontController extends Controller
         $view = Yii::$app->params['custom_view_for_modules']['poll_front']['index'] ?? 'index';
 
         $searchModel = new PollSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, true);
 
         return $this->render($view, [
             'dataProvider' => $dataProvider
@@ -77,7 +77,7 @@ class FrontController extends Controller
 
     protected function findModel($slug)
     {
-        $model = Poll::find()->where(['slug' => $slug])->one();
+        $model = Poll::find()->where(['slug' => $slug])->andWhere(['is_publish' => 1])->one();
         if($model === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
