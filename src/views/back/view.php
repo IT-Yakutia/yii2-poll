@@ -1,9 +1,8 @@
 <?php
 
-use dosamigos\chartjs\ChartJs;
 use Faker\Factory;
 use ityakutia\poll\models\PollQuestion;
-use practically\chartjs\Chart;
+use phpnt\chartJS\ChartJs;
 use yii\helpers\Html;
 
 $this->title = 'Результаты опроса: ' . $model->title;
@@ -33,11 +32,17 @@ $this->title = 'Результаты опроса: ' . $model->title;
 
                     $datasets = [];
 
+                    $max = 0;
                     $options = $question->pollOptions;
                     if (!empty($options)) {
                         foreach ($options as $option) {
+                            $votes = $option->pollVotesCount;
+                            if($max < $votes) {
+                                $max = $votes;
+                            }
+
                             $set = [];
-                            $set['data'][] = $option->pollVotesCount;
+                            $set['data'][] = $votes;
                             $set['backgroundColor'][] = $faker->rgbCssColor;
                             $set['label'] = $option->title;
                             $datasets[] = $set;
@@ -45,6 +50,20 @@ $this->title = 'Результаты опроса: ' . $model->title;
                     }
 
                     $data['data']['datasets'] = $datasets;
+                    $options = [
+                        'scales' => [
+                            'yAxes' => [[
+                                'display' => true,
+                                'ticks' => [
+                                    'beginAtZero' => true,
+                                    'max' => $max + round($max / 10),
+                                    'min' => 0
+                                ]
+                            ]]
+                        ],
+                    ];
+            
+                    $data['options'] = $options;
                     echo ChartJs::widget($data);
                 }
             }

@@ -15,7 +15,7 @@
         "uraankhayayaal/yii2-sortable": "*",
         "uraankhayayaal/yii2-materializecomponents": "*",
         "uraankhayayaal/yii2-redactor": "*",
-        "2amigos/yii2-chartjs-widget" : "~2.0"
+        "phpnt/yii2-chartjs": "*"
     },
     "extra": {
         "bootstrap": "ityakutia\\poll\\Bootstrap"
