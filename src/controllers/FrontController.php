@@ -38,7 +38,6 @@ class FrontController extends Controller
         $is_voted = Yii::$app->request->cookies->getValue("poll_voted_$model->id", false);
 
         if($is_voted) {
-            // var_dump($is_voted);
             return $this->render($thanks, [
                 'model' => $model,
                 'is_voted' => true
@@ -47,7 +46,7 @@ class FrontController extends Controller
 
         if (!empty($answer)) {
             foreach ($answer as $poll_id => $questions) {
-                if ($id != $poll_id) {
+                if ($model->id != $poll_id) {
                     break;
                 }
 
@@ -61,7 +60,9 @@ class FrontController extends Controller
                 }
 
                 $date = strtotime(date('Y-m-d H:i:s', strtotime('+1 month')));
-                Yii::$app->response->cookies->add(new Cookie(['name' => "poll_voted_$id", 'value' => 1, 'expire' => $date]));
+
+                $cookie = "poll_voted_$model->id";
+                Yii::$app->response->cookies->add(new Cookie(['name' => $cookie, 'value' => 1, 'expire' => $date]));
 
                 return $this->render($thanks, [
                     'model' => $model,
