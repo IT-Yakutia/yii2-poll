@@ -7,6 +7,13 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
 ?>
 
 <div class="poll-question-form">
+    <p></p>
+    <?= Html::a('Главная', ['/']) ?> /
+    <?= Html::a('Опросы', ['back/index']) ?> /
+    <?= Html::a('Просмотр опроса', ['back/view', 'id' => $model->poll->id]) ?> /
+    <?= Html::a('Редактирование опроса', ['back/update', 'id' => $model->poll->id]) ?> /
+    <?= Html::a('Вопросы', ['index', 'id' => $model->poll->id]) ?>
+    <p></p>
 
     <?php $form = ActiveForm::begin([
         'errorCssClass' => 'red-text',
@@ -23,7 +30,7 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?php if ($model->isNewRecord) echo Html::activeHiddenInput($model, 'poll_id', ['value' => $poll->id]) ?>
+    <?php if ($model->isNewRecord) echo Html::activeHiddenInput($model, 'poll_id', ['value' => $model->poll_id]) ?>
 
     <div class="row">
         <div class="col s12 m10 l8">
@@ -33,11 +40,11 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
         <div class="col s12 m10 l8 options-wrapper">
             <?php $number = 1; ?>
             <?php foreach ($model->pollOptions as $key => $option) { ?>
-                <?php $row_key = $key +1; ?>
+                <?php $row_key = $key + 1; ?>
                 <div class="form-group custom-poll-question-option" data-id="<?= $row_key ?>">
                     <input name="<?= Html::getInputName($model, 'options'); ?>[<?= $row_key ?>][id]" id="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-id" type="hidden" value="<?= $option->id; ?>">
                     <label class="control-label active" for="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-title">Вариант ответа <?= $row_key ?></label>
-                    <input type="text" id="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-title" class="form-control" name="<?= Html::getInputName($model, 'options'); ?>[<?= $row_key ?>][title]" value="<?= $option->title?>" maxlength="255" aria-required="true">
+                    <input type="text" id="<?= Html::getInputId($model, 'options'); ?>-<?= $row_key ?>-title" class="form-control" name="<?= Html::getInputName($model, 'options'); ?>[<?= $row_key ?>][title]" value="<?= $option->title ?>" maxlength="255" aria-required="true">
                     <div class="help-block"></div>
                 </div>
             <?php } ?>
@@ -50,11 +57,11 @@ use uraankhayayaal\materializecomponents\checkbox\WCheckbox;
         </div>
     </div>
 
-<?php
-$inputName = Html::getInputName($model, 'options');
-$inputId = Html::getInputId($model, 'options');
+    <?php
+    $inputName = Html::getInputName($model, 'options');
+    $inputId = Html::getInputId($model, 'options');
 
-$script = <<< JS
+    $script = <<< JS
     function CheckToAddNewRow(optopn_input) {
         var options_wrapper = $(optopn_input).closest('.options-wrapper');
         var custom_poll_question_option = $(optopn_input).closest('.custom-poll-question-option');
@@ -81,9 +88,9 @@ $script = <<< JS
     
 JS;
 
-$this->registerJs($script, $this::POS_READY);
+    $this->registerJs($script, $this::POS_READY);
 
-?>
+    ?>
 
     <div class="row">
         <div class="col 12">

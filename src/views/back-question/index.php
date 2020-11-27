@@ -7,13 +7,21 @@ use yii\grid\SerialColumn;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$this->title = $poll->title;
+$this->title = 'Вопросы: ' . $poll->title;
 
 ?>
 
 <div class="poll-quesiton-index">
     <div class="row">
         <div class="col s12">
+            <p></p>
+            <?= Html::a('Главная', ['/']) ?> /
+            <?= Html::a('Опросы', ['back/index']) ?> /
+            <?= Html::a('Просмотр опроса', ['back/view', 'id' => $poll->id]) ?> /
+            <?= Html::a('Редактирование опроса', ['back/update', 'id' => $poll->id]) ?> /
+            <?= Html::a('Вопросы', ['index', 'id' => $model->poll->id]) ?>
+            <p></p>
+
             <p>
                 <?= Html::a(
                     'Добавить вопрос',

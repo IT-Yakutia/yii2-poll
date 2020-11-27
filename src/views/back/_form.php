@@ -24,7 +24,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'slug')->textInput(['maxlength' => true])//->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) //->hiddenInput()->label(false) 
+    ?>
 
     <?php if (!$model->isNewRecord) { ?>
         <div class="input-field">

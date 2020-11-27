@@ -12,6 +12,11 @@ $this->title = 'Опросы';
 <div class="poll-index">
     <div class="row">
         <div class="col s12">
+            <p></p>
+            <?= Html::a('Главная', ['/']) ?> /
+            <?= Html::a('Опросы', ['index']) ?>
+            <p></p>
+
             <p>
                 <?= Html::a('Добавить новый опрос', ['create'], ['class' => 'btn']) ?>
             </p>
@@ -46,7 +51,7 @@ $this->title = 'Опросы';
                         'class' => MaterialActionColumn::class,
                         'template' => '{view} {update} {back-question/index}',
                         'buttons' => [
-                            'back-question/index' => function($url, $model, $key) {
+                            'back-question/index' => function ($url, $model, $key) {
                                 $icon = Html::tag('i', 'add_circle', ['class' => "material-icons"]);
                                 $options = [
                                     'title' => Yii::t('yii', 'Добавить вопросы'),
