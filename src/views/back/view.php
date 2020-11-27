@@ -15,8 +15,6 @@ $this->title = 'Результаты опроса: ' . $model->title;
         <div class="col s8 m8">
             <?php
 
-            $faker = Factory::create();
-
             $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
             if (!empty($questions)) {
                 foreach ($questions as $question) {
@@ -43,7 +41,7 @@ $this->title = 'Результаты опроса: ' . $model->title;
 
                             $set = [];
                             $set['data'][] = $votes;
-                            $set['backgroundColor'][] = $faker->rgbCssColor;
+                            $set['backgroundColor'][] = '#' . substr(md5(rand()), 0, 6);
                             $set['label'] = $option->title;
                             $datasets[] = $set;
                         }
@@ -62,7 +60,7 @@ $this->title = 'Результаты опроса: ' . $model->title;
                             ]]
                         ],
                     ];
-            
+
                     $data['options'] = $options;
                     echo ChartJs::widget($data);
                 }
