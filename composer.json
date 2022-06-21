@@ -12,9 +12,9 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.0",
-        "uraankhayayaal/yii2-sortable": "*",
-        "uraankhayayaal/yii2-materializecomponents": "*",
-        "uraankhayayaal/yii2-redactor": "*",
+        "uraankhayayaal/yii2-sortable": "~1.0.1",
+        "uraankhayayaal/yii2-materializecomponents": "~1.0.1",
+        "uraankhayayaal/yii2-redactor": "~1.0.0",
         "phpnt/yii2-chartjs": "*"
     },
     "extra": {
