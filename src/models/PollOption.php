@@ -82,9 +82,20 @@ class PollOption extends ActiveRecord
         return $this->hasOne(PollQuestion::class, ['id' => 'poll_question_id']);
     }
 
+    public function getPollVotes()
+    {
+        return $this->hasMany(PollVote::class, ['poll_option_id' => 'id']);
+    }
+
     public function getPollVotesCount()
     {
         return $this->hasMany(PollVote::class, ['poll_option_id' => 'id'])->count();
+    }
+
+    public function getProgressPercent()
+    {
+        $allQuestionVotes = PollVote::find()->joinWith(['pollOption'])->where(['poll_option.poll_question_id' => $this->poll_question_id])->count();
+        return $this->pollVotesCount / $allQuestionVotes * 100;
     }
 
 }

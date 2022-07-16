@@ -27,4 +27,12 @@ class PollVote extends ActiveRecord
             'poll_option_id' => Yii::t('app', 'Голос за ответ')
         ];
     }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getPollOption()
+    {
+        return $this->hasOne(PollOption::class, ['id' => 'poll_option_id']);
+    }
 }
