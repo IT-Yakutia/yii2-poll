@@ -30,6 +30,7 @@ use yii\db\ActiveRecord;
  */
 class Poll extends ActiveRecord
 {
+    const EMPTY_PHOTO = '/themes/basic/images/poll.jpg';
     public $pollAnswers = [];
 
     public function behaviors()
@@ -46,6 +47,15 @@ class Poll extends ActiveRecord
                 'slugAttribute' => 'slug',
                 'immutable' => true,
                 'ensureUnique' => true,
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    \yii\db\ActiveRecord::EVENT_AFTER_FIND => 'photo',
+                ],
+                'value' => function ($event) {
+                    return $this->photo = empty($this->photo) ? static::EMPTY_PHOTO : $this->photo;
+                },
             ],
         ];
     }
