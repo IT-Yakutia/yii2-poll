@@ -6,6 +6,7 @@ use uraankhayayaal\sortable\behaviors\Sortable;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
