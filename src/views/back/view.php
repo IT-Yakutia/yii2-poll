@@ -1,9 +1,8 @@
 <?php
 
-use Faker\Factory;
 use ityakutia\poll\models\PollQuestion;
-use phpnt\chartJS\ChartJs;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 $this->title = 'Результаты опроса: ' . $model->title;
 
@@ -19,63 +18,72 @@ $this->title = 'Результаты опроса: ' . $model->title;
 			<?= Html::a('Редактирование опроса', ['update', 'id' => $model->id]) ?> /
 			<?= Html::a('Вопросы', ['back-question/index', 'id' => $model->id]) ?>
             <p></p>
-
             <?php
+                $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
+                if (!empty($questions)) {
+                    foreach ($questions as $question) {
+                        echo Html::a("<h6>$question->title</h6>", ['back-question/update', 'id' => $question->id]);
 
-            $questions = PollQuestion::find()->where(['poll_id' => $model->id])->all();
-            if (!empty($questions)) {
-                foreach ($questions as $question) {
-                    echo Html::a("<h6>$question->title</h6>", ['back-question/update', 'id' => $question->id]);
+                        $data = [
+                            'type' => 'bar',
+                            'data' => [
+                                'labels' => [''],
+                                'datasets' => []
+                            ],
+                        ];
 
-                    $data = [
-                        'type' => 'bar',
-                        'data' => [
-                            'labels' => [''],
-                            'datasets' => []
-                        ],
-                    ];
+                        $datasets = [];
 
-                    $datasets = [];
+                        $max = 0;
+                        $options = $question->pollOptions;
+                        if (!empty($options)) {
+                            foreach ($options as $option) {
+                                $votes = $option->pollVotesCount;
+                                if ($max < $votes) {
+                                    $max = $votes;
+                                }
 
-                    $max = 0;
-                    $options = $question->pollOptions;
-                    if (!empty($options)) {
-                        foreach ($options as $option) {
-                            $votes = $option->pollVotesCount;
-                            if ($max < $votes) {
-                                $max = $votes;
+                                $set = [];
+                                $set['data'][] = $votes;
+                                $set['backgroundColor'][] = '#' . substr(md5(rand()), 0, 6);
+                                $set['label'] = $option->title;
+                                $datasets[] = $set;
                             }
-
-                            $set = [];
-                            $set['data'][] = $votes;
-                            $set['backgroundColor'][] = '#' . substr(md5(rand()), 0, 6);
-                            $set['label'] = $option->title;
-                            $datasets[] = $set;
                         }
+
+                        $data['data']['datasets'] = $datasets;
+                        $options = [
+                            'scales' => [
+                                'yAxes' => [[
+                                    'display' => true,
+                                    'ticks' => [
+                                        'beginAtZero' => true,
+                                        'max' => $max + round($max / 10),
+                                        'min' => 0
+                                    ]
+                                ]]
+                            ],
+                        ];
+
+                        $data['options'] = $options;
                     }
-
-                    $data['data']['datasets'] = $datasets;
-                    $options = [
-                        'scales' => [
-                            'yAxes' => [[
-                                'display' => true,
-                                'ticks' => [
-                                    'beginAtZero' => true,
-                                    'max' => $max + round($max / 10),
-                                    'min' => 0
-                                ]
-                            ]]
-                        ],
-                    ];
-
-                    $data['options'] = $options;
-                    echo ChartJs::widget($data);
                 }
-            }
+            ?>
+            <div class="chart-container" style="position: relative; width:100%; height:200px;">
+                <canvas id=<?= $id ?>></canvas>
+            </div>
+            <?php
+                $id = $model->id;
+                $data = Json::encode($data);
+                $this->registerJsFile('https://cdn.jsdelivr.net/npm/chart.js');
 
+$script = <<< JS
+    var ctx = document.getElementById($id);
+    var myChart = new Chart(ctx, $data);
+JS;
+
+                $this->registerJs($script, yii\web\View::POS_END);
             ?>
         </div>
     </div>
-
-
 </div>

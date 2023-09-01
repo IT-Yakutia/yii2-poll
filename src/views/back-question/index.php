@@ -19,7 +19,7 @@ $this->title = 'Вопросы: ' . $poll->title;
             <?= Html::a('Опросы', ['back/index']) ?> /
             <?= Html::a('Просмотр опроса', ['back/view', 'id' => $poll->id]) ?> /
             <?= Html::a('Редактирование опроса', ['back/update', 'id' => $poll->id]) ?> /
-            <?= Html::a('Вопросы', ['index', 'id' => $model->poll->id]) ?>
+            <?= Html::a('Вопросы', ['index', 'id' => $poll->id]) ?>
             <p></p>
 
             <p>
